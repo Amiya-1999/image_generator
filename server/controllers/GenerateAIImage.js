@@ -22,6 +22,7 @@ export const generateImage = async (req, res, next) => {
             response_format: 'b64_json'
         });
         const generatedImage = response.data.data[0].b64_json;
+        // const generatedImage = 'https://cdnb.artstation.com/p/assets/images/images/010/222/085/large/jia-hao-2017-wateryzard-comp-01.jpg?1523266603';
         return res.status(200).json({
             photo: generatedImage
         });

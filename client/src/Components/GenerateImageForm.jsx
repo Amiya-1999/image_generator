@@ -1,8 +1,10 @@
-import React from 'react'
+import React, { useState } from 'react'
 import styled from 'styled-components'
 import Button from './button'
 import TextInput from './TextInput'
 import { AutoAwesomeTwoTone, CreateRounded } from '@mui/icons-material'
+import { createPost, generateImage } from '../api'
+import { useNavigate } from 'react-router-dom';
 
 const Form = styled.div`
     flex: 1;
@@ -49,12 +51,36 @@ const Actions = styled.div`
 function GenerateImageForm({ post, setPost, generateImgLoading, setGenerateImgLoading,
     createPostLoading, setCreatePostLoading }) {
 
-    const generateImgLoadingFunc = () => {
+    const [error, setError] = useState('');
+    const navigate = useNavigate();
+
+    const generateImageFunc = async () => {
         setGenerateImgLoading(true);
+        await generateImage({ prompt: post.prompt })
+        .then((res) => {
+            // setTimeout(() => {
+            //     setPost({...post, photo: `${res?.data?.photo}`});
+            //     setGenerateImgLoading(false);
+            // }, 5000);
+
+            setPost({...post, photo: `data:image/jpge;base64, ${res?.data?.photo}`});
+            setGenerateImgLoading(false);
+        }).catch((error) => {
+            setError(error?.response?.data?.message || error?.response?.data?.split('Error: ')[1].split('<br>')[0]);
+            setGenerateImgLoading(false);
+        });
     }
 
-    const createPostLoadingFunc = () => {
+    const createPostFunc = async () => {
         setCreatePostLoading(true);
+        await createPost(post)
+        .then((res) => {
+            setCreatePostLoading(false);
+            navigate('/');
+        }).catch((error) => {
+            setError(error?.response?.data?.message || error?.response?.data?.split('Error: ')[1].split('<br>')[0]);
+            setCreatePostLoading(false);
+        });
     }
 
     return (
@@ -80,6 +106,10 @@ function GenerateImageForm({ post, setPost, generateImgLoading, setGenerateImgLo
                     value={post.prompt}
                     handelChange={(e) => setPost({ ...post, prompt: e.target.value })}
                 />
+                {(error && post.prompt !== '') && <div style={{color: 'red'}}>
+                    <p><em>Sorry! We are not able to generate your requested image at this moment due to the reason below</em></p>
+                    <p><strong>{error}</strong></p>
+                </div>}
                 ** You can post the AI Generated Image to the Community **
             </Body>
             <Actions>
@@ -89,7 +119,7 @@ function GenerateImageForm({ post, setPost, generateImgLoading, setGenerateImgLo
                     leftIcon={<AutoAwesomeTwoTone />}
                     isLoading={generateImgLoading}
                     isDisabled={post.prompt === ''}
-                    onClick={() => generateImgLoadingFunc()}
+                    onClick={() => generateImageFunc()}
                 />
                 <Button
                     text='Post Image'
@@ -98,7 +128,7 @@ function GenerateImageForm({ post, setPost, generateImgLoading, setGenerateImgLo
                     leftIcon={<CreateRounded />}
                     isLoading={createPostLoading}
                     isDisabled={post.author === '' || post.prompt === '' || post.photo === ''}
-                    onClick={() => createPostLoadingFunc()}
+                    onClick={() => createPostFunc()}
                 />
             </Actions>
         </Form>

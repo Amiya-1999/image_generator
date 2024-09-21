@@ -36,9 +36,9 @@ function CreatePost() {
   const [generateImgLoading, setGenerateImgLoading] = useState(false);
   const [createPostLoading, setCreatePostLoading] = useState(false);
   const [post, setPost] = useState({
-    author: 'Amiya Dey',
-    prompt: 'Generate an white girl AI image',
-    photo: 'https://tse2.mm.bing.net/th?id=OIP.tLotgCDtzgTdwJcTiXWRCwHaEK&pid=Api&P=0&h=180'
+    author: '',
+    prompt: '',
+    photo: ''
   });
 
   return (
