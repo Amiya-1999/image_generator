@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
-import GenerateImageForm from '../components/GenerateImageForm';
-import GeneratedImageCard from '../components/GeneratedImageCard';
+import GenerateImageForm from '../Components/GenerateImageForm';
+import GeneratedImageCard from '../Components/GeneratedImageCard';
 
 const Container = styled.div`
     height: 100%;
