@@ -78,7 +78,9 @@ function Home() {
             setPosts(res?.data?.data);
             setFilteredPosts(res?.data?.data);
         }).catch((error) => {
-            setError(error?.response?.data?.message || error?.response?.data?.split('Error: ')[1].split('<br>')[0]);
+          const startIndex = error?.response?.data?.indexOf('<pre>');
+          const lastIndex = error?.response?.data?.indexOf('</pre>');
+          setError(error?.response?.data?.message || error?.response?.data?.slice(startIndex + 5, lastIndex));
             setLoading(false);
         })
   }

@@ -66,7 +66,9 @@ function GenerateImageForm({ post, setPost, generateImgLoading, setGenerateImgLo
             setPost({...post, photo: `data:image/jpge;base64, ${res?.data?.photo}`});
             setGenerateImgLoading(false);
         }).catch((error) => {
-            setError(error?.response?.data?.message || error?.response?.data?.split('Error: ')[1].split('<br>')[0]);
+            const startIndex = error?.response?.data?.indexOf('<pre>');
+            const lastIndex = error?.response?.data?.indexOf('</pre>');
+            setError(error?.response?.data?.message || error?.response?.data?.slice(startIndex + 5, lastIndex));
             setGenerateImgLoading(false);
         });
     }
@@ -78,10 +80,20 @@ function GenerateImageForm({ post, setPost, generateImgLoading, setGenerateImgLo
             setCreatePostLoading(false);
             navigate('/');
         }).catch((error) => {
-            setError(error?.response?.data?.message || error?.response?.data?.split('Error: ')[1].split('<br>')[0]);
+            const startIndex = error?.response?.data?.indexOf('<pre>');
+            const lastIndex = error?.response?.data?.indexOf('</pre>');
+            setError(error?.response?.data?.message || error?.response?.data?.slice(startIndex + 5, lastIndex));
             setCreatePostLoading(false);
         });
     }
+
+    const handleChange = (e) => {
+        setPost({ ...post, prompt: e.target.value}); 
+            if(post.prompt === '') {
+                setError('');
+            }
+    }
+
 
     return (
         <Form>
@@ -104,7 +116,7 @@ function GenerateImageForm({ post, setPost, generateImgLoading, setGenerateImgLo
                     rows='8'
                     textArea
                     value={post.prompt}
-                    handelChange={(e) => setPost({ ...post, prompt: e.target.value })}
+                    handelChange={handleChange}
                 />
                 {(error && post.prompt !== '') && <div style={{color: 'red'}}>
                     <p><em>Sorry! We are not able to generate your requested image at this moment due to the reason below</em></p>
