@@ -3,7 +3,7 @@ import { darkTheme } from "./Utils/Theme.js";
 import Home from "./pages/Home";
 import CreatePost from "./pages/CreatePost";
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import Navbar from "./components/Navbar";
+import Navbar from "./Components/Navbar.jsx";
 
 const Container = styled.div`
   width: 100%;
