@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import GenerateImageForm from '../Components/GenerateImageForm';
 import GeneratedImageCard from '../Components/GeneratedImageCard';
@@ -35,18 +35,29 @@ function CreatePost() {
 
   const [generateImgLoading, setGenerateImgLoading] = useState(false);
   const [createPostLoading, setCreatePostLoading] = useState(false);
+  const [isErrorMsg, setIsErrorMsg] = useState(false);
   const [post, setPost] = useState({
     author: '',
     prompt: '',
     photo: ''
   });
 
+  useEffect(() => {
+    const wrapper = document.getElementById('error');
+    if(wrapper) {
+      if(isErrorMsg)
+        wrapper.classList.add('error');
+      else
+        wrapper.classList.remove('error');
+    }
+  }, [isErrorMsg]);
+
   return (
     <Container>
-      <Wrapper>
+      <Wrapper id='error'>
         <GenerateImageForm post={post} setPost={setPost} generateImgLoading={generateImgLoading}
           setGenerateImgLoading={setGenerateImgLoading} createPostLoading={createPostLoading}
-          setCreatePostLoading={setCreatePostLoading} />
+          setCreatePostLoading={setCreatePostLoading} setIsErrorMsg={setIsErrorMsg} />
         <GeneratedImageCard src={post.photo} loading={generateImgLoading} />
       </Wrapper>
     </Container>

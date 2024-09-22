@@ -35,3 +35,7 @@ html {
 ::-webkit-scrollbar-thumb:hover {
   background: #626970;
 }
+
+.error {
+  margin-top: 8rem;
+}

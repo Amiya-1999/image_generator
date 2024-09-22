@@ -49,7 +49,7 @@ const Actions = styled.div`
 `;
 
 function GenerateImageForm({ post, setPost, generateImgLoading, setGenerateImgLoading,
-    createPostLoading, setCreatePostLoading }) {
+    createPostLoading, setCreatePostLoading, setIsErrorMsg }) {
 
     const [error, setError] = useState('');
     const navigate = useNavigate();
@@ -70,6 +70,7 @@ function GenerateImageForm({ post, setPost, generateImgLoading, setGenerateImgLo
             const lastIndex = error?.response?.data?.indexOf('</pre>');
             setError(error?.response?.data?.message || error?.response?.data?.slice(startIndex + 5, lastIndex));
             setGenerateImgLoading(false);
+            setIsErrorMsg(true);
         });
     }
 
@@ -84,13 +85,15 @@ function GenerateImageForm({ post, setPost, generateImgLoading, setGenerateImgLo
             const lastIndex = error?.response?.data?.indexOf('</pre>');
             setError(error?.response?.data?.message || error?.response?.data?.slice(startIndex + 5, lastIndex));
             setCreatePostLoading(false);
+            setIsErrorMsg(true);
         });
     }
 
     const handleChange = (e) => {
         setPost({ ...post, prompt: e.target.value}); 
-            if(post.prompt === '') {
+            if(e.target.value === '') {
                 setError('');
+                setIsErrorMsg(false);
             }
     }
 
